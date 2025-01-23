@@ -1,10 +1,23 @@
 import requests
+import json
+from datetime import datetime, timedelta
+import time
 import pandas as pd
-from datetime import datetime
 
 # Configuration
+AQI_API_KEY = "6f5bd489ac2182623da65e8c0210a0d3"  # AQI API key
 WEATHER_API_KEY = "a8b5181c2df94da6943114229252201"  # WeatherAPI key
 CITY = "Karachi"
+
+# Function to fetch coordinates
+def fetch_coordinates():
+    GEO_URL = f"http://api.openweathermap.org/geo/1.0/direct?q={CITY}&limit=1&appid={AQI_API_KEY}"
+    response = requests.get(GEO_URL)
+    if response.status_code == 200:
+        data = response.json()
+        if data:
+            return data[0]['lat'], data[0]['lon']
+    raise Exception("Failed to fetch coordinates.")
 
 # Function to fetch weather forecast for the next 3 days
 def fetch_weather_forecast(lat, lon):
